@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Akademik Makale Üretim Sistemi - HTML</title>
+  <style>
+    :root{
+      --bg1:#f5f7fa;--bg2:#c3cfe2;--card:#ffffff;--line:#e5e7eb;--text:#1f2937;--muted:#6b7280;
+      --primary:#667eea;--primary2:#764ba2;--success:#16a34a;--warn:#f59e0b;--danger:#dc2626;
+      --shadow:0 10px 30px rgba(0,0,0,.08);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;height:100%;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--text);background:linear-gradient(135deg,var(--bg1) 0%,var(--bg2) 100%)}
+    body{display:flex;min-height:100vh}
+    .sidebar{width:320px;background:linear-gradient(180deg,#243447 0%,#34495e 100%);color:#fff;padding:22px 18px;position:sticky;top:0;height:100vh;overflow:auto}
+    .brand{display:flex;gap:14px;align-items:center;margin-bottom:20px}
+    .brand .logo{width:54px;height:54px;border-radius:16px;background:linear-gradient(135deg,#8ec5fc 0%,#e0c3fc 100%);display:grid;place-items:center;font-size:28px;box-shadow:var(--shadow)}
+    .brand h1{font-size:1.1rem;line-height:1.25;margin:0}
+    .side-title{font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;opacity:.8;margin:18px 0 10px}
+    .nav button{width:100%;text-align:left;border:0;background:rgba(255,255,255,.08);color:#fff;padding:12px 14px;border-radius:12px;margin-bottom:8px;cursor:pointer;transition:.2s;font-weight:600}
+    .nav button:hover,.nav button.active{background:linear-gradient(90deg,var(--primary) 0%,var(--primary2) 100%);transform:translateY(-1px)}
+    .mini-card{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:12px 13px;margin-bottom:10px}
+    .mini-card .label{font-size:.78rem;opacity:.8;margin-bottom:4px}
+    .progress-list{display:grid;gap:8px}
+    .progress-item{font-size:.92rem;display:flex;justify-content:space-between;gap:10px;background:rgba(255,255,255,.06);padding:10px 12px;border-radius:10px}
+    .main{flex:1;padding:26px;overflow:auto}
+    .hero{background:linear-gradient(90deg,var(--primary) 0%,var(--primary2) 100%);color:#fff;padding:22px 26px;border-radius:20px;box-shadow:var(--shadow);margin-bottom:22px}
+    .hero h2{margin:0 0 6px;font-size:1.6rem}
+    .hero p{margin:0;opacity:.92}
+    .grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:18px}
+    .card{grid-column:span 12;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;border:1px solid rgba(255,255,255,.5)}
+    .card h3{margin:0 0 8px;font-size:1.25rem;color:#243447}
+    .card p.lead{margin:0 0 18px;color:var(--muted)}
+    .muted{color:var(--muted)}
+    .cols-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    .cols-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+    label{display:block;font-size:.92rem;font-weight:600;margin-bottom:6px}
+    input,select,textarea{width:100%;border:1px solid #d1d5db;border-radius:12px;padding:11px 12px;font:inherit;background:#fff;color:var(--text)}
+    textarea{min-height:130px;resize:vertical;line-height:1.6}
+    input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 4px rgba(102,126,234,.12)}
+    .btn-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+    .btn{border:0;border-radius:999px;padding:11px 16px;font-weight:700;cursor:pointer;transition:.2s}
+    .btn.primary{background:linear-gradient(90deg,var(--primary) 0%,var(--primary2) 100%);color:#fff}
+    .btn.secondary{background:#eef2ff;color:#3730a3}
+    .btn.ghost{background:#f3f4f6;color:#111827}
+    .btn.success{background:#dcfce7;color:#166534}
+    .btn.warn{background:#fef3c7;color:#92400e}
+    .btn:hover{transform:translateY(-1px)}
+    .tag{display:inline-flex;align-items:center;gap:6px;background:#eef2ff;color:#4338ca;padding:5px 10px;border-radius:999px;font-size:.82rem;font-weight:700;margin:3px 6px 3px 0}
+    .metric-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+    .metric{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;text-align:center}
+    .metric .value{font-size:1.4rem;font-weight:800;color:#4338ca;margin-bottom:4px}
+    .metric .name{font-size:.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+    .hidden{display:none !important}
+    .section{display:none}
+    .section.active{display:block}
+    .output{background:#fcfcff;border:1px solid #e2e8f0;border-radius:16px;padding:16px;white-space:pre-wrap;line-height:1.65}
+    .tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+    .tab-btn{border:0;padding:10px 14px;border-radius:12px;background:#f3f4f6;font-weight:700;cursor:pointer}
+    .tab-btn.active{background:linear-gradient(90deg,var(--primary) 0%,var(--primary2) 100%);color:#fff}
+    .tab-panel{display:none}
+    .tab-panel.active{display:block}
+    .list{display:grid;gap:10px}
+    .list-item{background:#fff;border:1px solid var(--line);border-left:5px solid var(--primary);padding:12px 14px;border-radius:12px}
+    .checklist{display:grid;gap:10px}
+    .check{display:flex;align-items:flex-start;gap:10px;background:#fff;border:1px solid var(--line);padding:12px;border-radius:12px}
+    .risk-high{color:var(--danger);font-weight:800}.risk-medium{color:var(--warn);font-weight:800}.risk-low{color:var(--success);font-weight:800}
+    .small{font-size:.86rem}
+    .footer-note{margin-top:16px;color:var(--muted);font-size:.88rem}
+    .pill{display:inline-block;padding:4px 10px;border-radius:999px;background:#f3f4f6;color:#374151;font-weight:700;font-size:.8rem}
+    .danger-box,.info-box,.success-box,.warning-box{padding:14px 16px;border-radius:14px;margin:10px 0;border:1px solid transparent}
+    .info-box{background:#eef2ff;border-color:#c7d2fe;color:#312e81}
+    .success-box{background:#ecfdf5;border-color:#a7f3d0;color:#065f46}
+    .warning-box{background:#fff7ed;border-color:#fdba74;color:#9a3412}
+    .danger-box{background:#fef2f2;border-color:#fca5a5;color:#991b1b}
+    .top-actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+    @media (max-width:1100px){.sidebar{width:280px}.metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media (max-width:900px){body{display:block}.sidebar{width:100%;height:auto;position:relative}.main{padding:16px}.cols-2,.cols-3,.metric-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">📚</div>
+      <div>
+        <h1>Akademik Makale Sistemi</h1>
+        <div class="small">HTML sürümü · tarayıcıda çalışır</div>
+      </div>
+    </div>
+
+    <div class="side-title">Çalışma Modu</div>
+    <div class="nav" id="nav"></div>
+
+    <div class="side-title">Proje Bilgileri</div>
+    <div class="mini-card"><div class="label">Proje</div><div id="sidebarProject">Henüz girilmedi</div></div>
+    <div class="mini-card"><div class="label">Başlık</div><div id="sidebarTitle">Henüz girilmedi</div></div>
+    <div class="mini-card"><div class="label">Hedef</div><div id="sidebarTarget">Henüz seçilmedi</div></div>
+
+    <div class="side-title">İlerleme</div>
+    <div class="progress-list" id="progressList"></div>
+
+    <div class="side-title">Yerel Kayıt</div>
+    <div class="mini-card small">Tüm veriler yalnızca bu tarayıcıdaki localStorage içinde tutulur. Sunucu gerektirmez.</div>
+  </aside>
+
+  <main class="main">
+    <div class="hero">
+      <h2>🎓 Akademik Makale Üretim ve Hakem Dayanıklılık Sistemi</h2>
+      <p>SSCI / Scopus / WoS / ESCI / TR Dizin mantığında yapılandırılmış, Python/Streamlit uygulamasının tek dosyalık HTML uyarlaması.</p>
+    </div>
+
+    <div class="top-actions">
+      <button class="btn secondary" id="saveJsonBtn">💾 Projeyi JSON indir</button>
+      <label class="btn ghost" for="loadJsonInput">📂 JSON yükle</label>
+      <input id="loadJsonInput" type="file" accept="application/json" class="hidden" />
+      <button class="btn warn" id="resetBtn">♻️ Verileri sıfırla</button>
+    </div>
+
+    <section id="yol_haritasi" class="section active">
+      <div class="card">
+        <h3>🗺️ Stratejik Yayın Yol Haritası</h3>
+        <p class="lead">Makalenizin akademik dayanıklılığını artırmak için kapsamlı stratejik plan üretir. Orijinal Streamlit modülündeki mantığın HTML uyarlamasıdır.</p>
+        <div class="cols-2">
+          <div>
+            <label>Proje Adı</label>
+            <input id="proje_adi" placeholder="Örn: Dijital Diplomasi Projesi" />
+          </div>
+          <div>
+            <label>Makale Başlığı / Konu *</label>
+            <input id="makale_basligi" placeholder="Örn: Türkiye'de İHA ve SİHA'ların Stratejik Rolü" />
+          </div>
+          <div>
+            <label>Dil</label>
+            <select id="dil"><option>Türkçe</option><option>İngilizce</option></select>
+          </div>
+          <div>
+            <label>Hedef İndeks / Düzey</label>
+            <select id="hedef_indeks"><option>SSCI</option><option>Scopus Q1-Q2</option><option>WoS</option><option>ESCI</option><option>TR Dizin</option><option>Diğer</option></select>
+          </div>
+          <div>
+            <label>Kaynakça Stili</label>
+            <select id="kaynakca_stili"><option>APA 7</option><option>APA 6</option><option>MLA</option><option>Chicago</option><option>Harvard</option><option>Vancouver</option><option>IEEE</option></select>
+          </div>
+          <div>
+            <label>Hedef Benzerlik Oranı</label>
+            <select id="hedef_benzerlik"><option>&lt;10%</option><option selected>&lt;15%</option><option>&lt;20%</option><option>&lt;25%</option></select>
+          </div>
+          <div>
+            <label>Yöntem Tercihi</label>
+            <select id="yontem_tercihi"><option value="">Seçiniz</option><option>Nitel Araştırma</option><option>Nicel Araştırma</option><option>Karma Yöntem</option><option>Belge Analizi</option><option>Söylem Analizi</option><option>Karşılaştırmalı Analiz</option><option>Tarihsel-İstitüsyonel Okuma</option><option>Kuramsal Çerçeve</option></select>
+          </div>
+          <div>
+            <label>Hedef Dergi</label>
+            <input id="hedef_dergi" placeholder="Örn: Turkish Studies" />
+          </div>
+          <div>
+            <label>Çalışma Alanı</label>
+            <select id="alan"><option value="">Seçiniz</option><option>Sosyoloji</option><option>Siyaset Bilimi</option><option>Uluslararası İlişkiler</option><option>İletişim</option><option>Eğitim</option><option>İşletme</option><option>Hukuk</option><option>Tarih</option><option>Ekonomi</option><option>Kamu Yönetimi</option><option>Diğer</option></select>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn primary" id="generateRoadmap">🚀 Yol Haritası Oluştur</button>
+          <button class="btn success" id="approveRoadmap">✅ Onayla ve Makale Yazımına Başla</button>
+        </div>
+        <div id="roadmapOutput" class="output hidden" style="margin-top:16px"></div>
+      </div>
+    </section>
+
+    <section id="makale_yazim" class="section">
+      <div class="card">
+        <h3>✍️ Bölüm Bölüm Makale Yazımı</h3>
+        <p class="lead">Bölümleri doldurun, kaydedin ve hakem kontrol listesini kullanın.</p>
+        <div class="tabs" id="sectionTabs"></div>
+        <div id="sectionPanels"></div>
+      </div>
+    </section>
+
+    <section id="tam_makale" class="section">
+      <div class="card">
+        <h3>📄 Tam Makale Üretimi</h3>
+        <p class="lead">Kaydedilmiş bölümleri tek akışta birleştirir.</p>
+        <div class="btn-row">
+          <button class="btn primary" id="assembleArticle">🚀 Tam Makaleyi Birleştir</button>
+          <button class="btn secondary" id="downloadArticleTxt">📝 TXT indir</button>
+        </div>
+        <div id="fullArticleOutput" class="output hidden" style="margin-top:16px"></div>
+      </div>
+    </section>
+
+    <section id="hakem_simulasyonu" class="section">
+      <div class="card">
+        <h3>🔍 Hakem Eleştirisi ve Revizyon Simülasyonu</h3>
+        <p class="lead">Metne göre büyük eleştiriler, küçük eleştiriler ve revizyon stratejisi üretir.</p>
+        <label>Değerlendirilecek Metin</label>
+        <textarea id="reviewerInput" placeholder="Makale, bölüm veya özet metnini buraya yapıştırın."></textarea>
+        <div class="btn-row"><button class="btn primary" id="generateReview">🔍 Hakem Raporu Oluştur</button></div>
+        <div id="reviewOutput" class="output hidden" style="margin-top:16px"></div>
+      </div>
+    </section>
+
+    <section id="kaynakca_yonetimi" class="section">
+      <div class="card">
+        <h3>📚 Kaynakça / Atıf Denetimi</h3>
+        <p class="lead">Kaynak ekleme, düzey sınıflandırma ve temel kaynak analizi.</p>
+        <div class="cols-3">
+          <div>
+            <label>Yazar(lar)</label>
+            <input id="refAuthors" placeholder="Soyad, A. A." />
+          </div>
+          <div>
+            <label>Yıl</label>
+            <input id="refYear" placeholder="2024" />
+          </div>
+          <div>
+            <label>Düzey</label>
+            <select id="refTier"><option>A</option><option>B</option><option>C</option></select>
+          </div>
+          <div>
+            <label>Başlık</label>
+            <input id="refTitle" placeholder="Makale / kitap başlığı" />
+          </div>
+          <div>
+            <label>Kaynak / Dergi</label>
+            <input id="refSource" placeholder="Journal name / publisher" />
+          </div>
+          <div>
+            <label>DOI / URL</label>
+            <input id="refDoi" placeholder="10...." />
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn primary" id="addRefBtn">✅ Kaynak Ekle</button>
+          <button class="btn secondary" id="exportRefsBtn">💾 Kaynakçayı indir</button>
+        </div>
+        <div class="metric-grid" style="margin-top:16px">
+          <div class="metric"><div class="value" id="refCount">0</div><div class="name">Toplam Kaynak</div></div>
+          <div class="metric"><div class="value" id="refCountA">0</div><div class="name">A Düzeyi</div></div>
+          <div class="metric"><div class="value" id="refCountB">0</div><div class="name">B Düzeyi</div></div>
+          <div class="metric"><div class="value" id="refCountC">0</div><div class="name">C Düzeyi</div></div>
+        </div>
+        <div id="refList" class="list" style="margin-top:16px"></div>
+      </div>
+    </section>
+
+    <section id="tez_makale" class="section">
+      <div class="card">
+        <h3>🎓 Tezden Makaleye Dönüştürme</h3>
+        <p class="lead">Tezden makaleye dönüşüm için yol, kapsam daraltma ve yayın stratejisi üretir.</p>
+        <div class="cols-3">
+          <div><label>Tez Başlığı</label><input id="thesisTitle" placeholder="Tez başlığı" /></div>
+          <div><label>Tez Türü</label><select id="thesisType"><option>Doktora</option><option>Yüksek Lisans</option></select></div>
+          <div><label>Tez Alanı</label><select id="thesisField"><option>Sosyal Bilimler</option><option>Beşeri Bilimler</option><option>Sağlık</option><option>Fen</option><option>Mühendislik</option></select></div>
+        </div>
+        <label style="margin-top:12px">Tezin Özeti / Kısa Açıklaması</label>
+        <textarea id="thesisSummary"></textarea>
+        <div class="btn-row"><button class="btn primary" id="convertThesisBtn">🤖 Dönüştürme Planı Oluştur</button></div>
+        <div id="thesisOutput" class="output hidden" style="margin-top:16px"></div>
+      </div>
+    </section>
+
+    <section id="dergi_uyarlama" class="section">
+      <div class="card">
+        <h3>🎯 Hedef Dergiye Uyarlama</h3>
+        <p class="lead">Dergi beklentilerine göre metninizi yeniden konumlandırır ve uyumluluk skoru üretir.</p>
+        <div class="cols-3">
+          <div><label>Dergi Adı</label><input id="journalName" placeholder="Journal / Dergi" /></div>
+          <div><label>Alan</label><input id="journalArea" placeholder="Örn: Uluslararası İlişkiler" /></div>
+          <div><label>Kaynakça Stili</label><select id="journalStyle"><option>APA</option><option>MLA</option><option>Chicago</option><option>Harvard</option><option>Vancouver</option></select></div>
+        </div>
+        <label style="margin-top:12px">Dergi Yönergeleri / Notlar</label>
+        <textarea id="journalRules" placeholder="Kelime sınırı, yapı, anahtar kelime sayısı, yöntem beklentisi vb."></textarea>
+        <div class="btn-row"><button class="btn primary" id="adaptJournalBtn">🔄 Uyarlama Yap</button></div>
+        <div id="journalOutput" class="output hidden" style="margin-top:16px"></div>
+      </div>
+    </section>
+
+    <section id="abstract_guclendirme" class="section">
+      <div class="card">
+        <h3>💎 Öz / Abstract Güçlendirme</h3>
+        <p class="lead">Mevcut abstract'ı yapı, katkı ve yöntem görünürlüğü bakımından güçlendirir.</p>
+        <div class="cols-2">
+          <div><label>Dil</label><select id="abstractLang"><option>Türkçe</option><option>İngilizce</option></select></div>
+          <div><label>Yapı</label><select id="abstractStructure"><option>Yapılandırılmış</option><option>Paragraf</option></select></div>
+        </div>
+        <label style="margin-top:12px">Mevcut Abstract</label>
+        <textarea id="abstractInput"></textarea>
+        <div class="btn-row"><button class="btn primary" id="strengthenAbstractBtn">🤖 Güçlendir</button></div>
+        <div id="abstractOutput" class="output hidden" style="margin-top:16px"></div>
+      </div>
+    </section>
+
+    <section id="bolum_guclendirme" class="section">
+      <div class="card">
+        <h3>🔧 Tekil Bölüm Güçlendirme</h3>
+        <p class="lead">Seçili bölümü yeniden yazma, hakem eleştirisi üretme ve desk reject analizi verme işlevi sunar.</p>
+        <div class="cols-2">
+          <div>
+            <label>Bölüm</label>
+            <select id="singleSectionSelect"></select>
+          </div>
+          <div>
+            <label>Kaynak içerik</label>
+            <input id="loadFromSaved" value="Kaydedilmiş bölüm metni otomatik kullanılır" disabled />
+          </div>
+        </div>
+        <label style="margin-top:12px">Bölüm İçeriği</label>
+        <textarea id="singleSectionText"></textarea>
+        <div class="btn-row">
+          <button class="btn secondary" id="rewriteSectionBtn">📝 Yeniden Yaz</button>
+          <button class="btn primary" id="critiqueSectionBtn">🔍 Hakem Eleştirisi</button>
+          <button class="btn warn" id="deskRiskBtn">📊 Desk Reject Analizi</button>
+        </div>
+        <div id="singleSectionOutput" class="output hidden" style="margin-top:16px"></div>
+      </div>
+    </section>
+
+    <section id="son_kontrol" class="section">
+      <div class="card">
+        <h3>✅ Yayın Öncesi Son Kontrol</h3>
+        <p class="lead">Makale, kaynakça, abstract ve yöntem görünürlüğü açısından son kontrol üretir.</p>
+        <div id="finalChecklist" class="checklist"></div>
+        <div class="btn-row"><button class="btn primary" id="runFinalCheckBtn">🛡️ Son Değerlendirme</button></div>
+        <div id="finalOutput" class="output hidden" style="margin-top:16px"></div>
+      </div>
+    </section>
+
+    <section id="ai_maskesi" class="section">
+      <div class="card">
+        <h3>🎭 AI Detektör Maskesi</h3>
+        <p class="lead">Metni daha doğal ve insan yazısı hissine yaklaştıran yüzeysel bir varyasyon üretir. Bu sürüm gerçek tespit sistemlerini atlatma garantisi vermez.</p>
+        <div class="warning-box">Bu HTML sürümünde güvenli bir yaklaşım izlendi: metni daha doğal hâle getiren düzenleme önerileri ve sınırlı yeniden ifade üretimi sağlanır; tespit sistemlerini aşmaya yönelik iddialı bir bypass aracı sunulmaz.</div>
+        <label>Metin</label>
+        <textarea id="maskInput"></textarea>
+        <div class="btn-row"><button class="btn primary" id="maskBtn">🎭 Maskeleme Uygula</button></div>
+        <div id="maskOutput" class="output hidden" style="margin-top:16px"></div>
+      </div>
+    </section>
+
+    <section id="api_entegrasyonu" class="section">
+      <div class="card">
+        <h3>🔌 API Entegrasyonu</h3>
+        <p class="lead">Anahtarlar localStorage içine kaydedilir. HTML sürümünde gerçek API çağrısı yapılmaz; yalnızca ayarlar tutulur.</p>
+        <div class="metric-grid">
+          <div class="metric"><div class="value" id="openaiStatus">🔴 Pasif</div><div class="name">OpenAI</div></div>
+          <div class="metric"><div class="value" id="anthropicStatus">🔴 Pasif</div><div class="name">Anthropic</div></div>
+          <div class="metric"><div class="value" id="googleStatus">🔴 Pasif</div><div class="name">Google</div></div>
+          <div class="metric"><div class="value">🔴 Pasif</div><div class="name">Akademik DB</div></div>
+        </div>
+        <div class="tabs" style="margin-top:16px">
+          <button class="tab-btn active" data-tab="api-openai">OpenAI</button>
+          <button class="tab-btn" data-tab="api-anthropic">Anthropic</button>
+          <button class="tab-btn" data-tab="api-google">Google</button>
+          <button class="tab-btn" data-tab="api-model">Model Seçimi</button>
+          <button class="tab-btn" data-tab="api-test">Test</button>
+        </div>
+        <div id="api-openai" class="tab-panel active">
+          <div class="cols-2">
+            <div><label>OpenAI API Key</label><input type="password" id="openaiKey" placeholder="sk-..." /></div>
+            <div><label>Model</label><select id="openaiModel"><option>gpt-4-turbo-preview</option><option>gpt-4</option><option>gpt-3.5-turbo</option></select></div>
+          </div>
+          <div class="btn-row"><button class="btn primary" id="saveOpenAI">💾 OpenAI Ayarlarını Kaydet</button></div>
+        </div>
+        <div id="api-anthropic" class="tab-panel">
+          <div class="cols-2">
+            <div><label>Anthropic API Key</label><input type="password" id="anthropicKey" placeholder="sk-ant-..." /></div>
+            <div><label>Model</label><select id="anthropicModel"><option>claude-3-opus-20240229</option><option selected>claude-3-sonnet-20240229</option><option>claude-3-haiku-20240307</option></select></div>
+          </div>
+          <div class="btn-row"><button class="btn primary" id="saveAnthropic">💾 Anthropic Ayarlarını Kaydet</button></div>
+        </div>
+        <div id="api-google" class="tab-panel">
+          <div class="cols-2">
+            <div><label>Google API Key</label><input type="password" id="googleKey" placeholder="AIza..." /></div>
+            <div><label>Model</label><select id="googleModel"><option>gemini-pro</option><option>gemini-ultra</option></select></div>
+          </div>
+          <div class="btn-row"><button class="btn primary" id="saveGoogle">💾 Google Ayarlarını Kaydet</button></div>
+        </div>
+        <div id="api-model" class="tab-panel">
+          <div class="cols-3">
+            <div><label>Varsayılan Sağlayıcı</label><select id="activeProvider"><option value="openai">OpenAI</option><option value="anthropic">Anthropic</option><option value="google">Google</option></select></div>
+            <div><label>Temperature</label><input type="number" id="temperature" step="0.1" min="0" max="1" value="0.7" /></div>
+            <div><label>Max Tokens</label><input type="number" id="maxTokens" step="100" min="1000" max="8000" value="4000" /></div>
+          </div>
+          <div class="btn-row"><button class="btn primary" id="saveProvider">💾 Gelişmiş Ayarları Kaydet</button></div>
+        </div>
+        <div id="api-test" class="tab-panel">
+          <label>Test Mesajı</label><input id="testMessage" value="Merhaba, bu bir test mesajıdır." />
+          <div class="btn-row"><button class="btn primary" id="testApiBtn">🚀 Test Et</button></div>
+          <div id="apiTestOutput" class="output hidden" style="margin-top:16px"></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer-note">Not: Bu dosya, yüklediğiniz Python/Streamlit projesinin tarayıcıda doğrudan açılabilen HTML sürümüdür. Orijinal Python modüllerindeki gerçek AI entegrasyonları burada yoktur; buna karşılık arayüz ve temel yerel işlevler korunmuştur.</div>
+  </main>
+
+  <script>
+    const STORAGE_KEY = 'akademik_makale_html_v1';
+    const modes = [
+      ['yol_haritasi','🗺️ Stratejik Yayın Yol Haritası'],
+      ['makale_yazim','✍️ Bölüm Bölüm Makale Yazımı'],
+      ['tam_makale','📄 Tam Makale Üretimi'],
+      ['hakem_simulasyonu','🔍 Hakem Eleştirisi ve Revizyon'],
+      ['kaynakca_yonetimi','📚 Kaynakça / Atıf Denetimi'],
+      ['tez_makale','🎓 Tezden Makaleye Dönüştürme'],
+      ['dergi_uyarlama','🎯 Hedef Dergiye Uyarlama'],
+      ['abstract_guclendirme','💎 Öz / Abstract Güçlendirme'],
+      ['bolum_guclendirme','🔧 Tekil Bölüm Güçlendirme'],
+      ['son_kontrol','✅ Yayın Öncesi Son Kontrol'],
+      ['ai_maskesi','🎭 AI Detektör Maskesi'],
+      ['api_entegrasyonu','🔌 API Entegrasyonu']
+    ];
+    const sectionKeys = [
+      ['baslik','Başlık'],['abstract','Abstract'],['anahtar_kelimeler','Anahtar Kelimeler'],['giris','Giriş'],['literatur','Literatür'],['arastirma_boslugu','Araştırma Boşluğu'],['kuramsal_cerceve','Kuramsal Çerçeve'],['yontem','Yöntem'],['analiz','Analiz'],['sonuc','Sonuç'],['kaynakca','Kaynakça']
+    ];
+    const defaultState = {
+      proje_adi:'',makale_basligi:'',konu:'',dil:'Türkçe',hedef_indeks:'SSCI',kaynakca_stili:'APA 7',hedef_benzerlik:'<15%',yontem_tercihi:'',hedef_dergi:'',alan:'',
+      bolumler:Object.fromEntries(sectionKeys.map(([k])=>[k,''])),
+      ilerleme:Object.fromEntries(sectionKeys.map(([k,v])=>[v,false])),
+      yol_haritasi:'',
+      kaynaklar:[],
+      api_ayarlari:{openai_api_key:'',anthropic_api_key:'',google_api_key:'',openai_model:'gpt-4-turbo-preview',anthropic_model:'claude-3-sonnet-20240229',google_model:'gemini-pro',active_provider:'openai',temperature:0.7,max_tokens:4000},
+      thesis:{},journal:{},history:[]
+    };
+    let state = loadState();
+
+    function loadState(){
+      try{ return {...structuredClone(defaultState), ...JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}')}; }catch(e){ return structuredClone(defaultState); }
+    }
+    function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); updateSidebar(); updateRefMetrics(); updateApiStatus(); renderFinalChecklist(); }
+    function structuredClone(obj){ return JSON.parse(JSON.stringify(obj)); }
+    function byId(id){ return document.getElementById(id); }
+    function download(filename, content, type='text/plain;charset=utf-8'){ const blob=new Blob([content],{type}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=filename; a.click(); URL.revokeObjectURL(a.href); }
+    function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
+
+    function initNav(){
+      const nav = byId('nav');
+      nav.innerHTML = modes.map(([id,label],i)=>`<button data-mode="${id}" class="${i===0?'active':''}">${label}</button>`).join('');
+      nav.querySelectorAll('button').forEach(btn=>btn.addEventListener('click',()=>switchMode(btn.dataset.mode)));
+    }
+    function switchMode(mode){
+      document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active', b.dataset.mode===mode));
+      document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active', s.id===mode));
+    }
+    function updateSidebar(){
+      byId('sidebarProject').textContent = state.proje_adi || 'Henüz girilmedi';
+      byId('sidebarTitle').textContent = state.makale_basligi || 'Henüz girilmedi';
+      byId('sidebarTarget').textContent = state.hedef_indeks || 'Henüz seçilmedi';
+      const progressList = byId('progressList');
+      progressList.innerHTML = Object.entries(state.ilerleme).map(([label,done])=>`<div class="progress-item"><span>${label}</span><strong>${done?'✅':'⬜'}</strong></div>`).join('');
+    }
+    function populateGeneralFields(){
+      ['proje_adi','makale_basligi','dil','hedef_indeks','kaynakca_stili','hedef_benzerlik','yontem_tercihi','hedef_dergi','alan'].forEach(id=>{ if(byId(id)){ byId(id).value = state[id] || ''; byId(id).addEventListener('input', ()=>{state[id]=byId(id).value; saveState();}); }});
+    }
+    function generateRoadmap(){
+      const baslik = state.makale_basligi.trim();
+      if(!baslik){ alert('Lütfen makale başlığı/konusu girin.'); return; }
+      const alan = state.alan || '[Alan belirtilmedi]';
+      const hedef = state.hedef_indeks || 'SSCI';
+      const yontem = state.yontem_tercihi || 'Nitel Araştırma';
+      const hedefDergi = state.hedef_dergi || 'Belirtilmedi';
+      const output = `📊 STRATEJİK YAYIN YOL HARİTASI\n\nÖnerilen Başlık:\n${baslik}${state.alan ? `: ${alan} Perspektifinden Kuramsal ve Ampirik Bir İnceleme` : ''}\n\nAraştırma Problemi:\n${baslik} konusunda mevcut literatürün teorik ve metodolojik sınırlılıkları dikkate alındığında, bu alanda kapsamlı ve güncel bir analize ihtiyaç vardır. Özellikle ${hedef} standartlarında özgün katkı sunabilecek araştırma boşlukları görünür hâle getirilmelidir.\n\nAna Araştırma Soruları:\n1. ${baslik} nasıl kavramsallaştırılmalı ve analiz edilmelidir?\n2. Bu olgu hangi kuramsal çerçevelerle açıklanabilir?\n3. Mevcut literatür hangi kör noktalara sahiptir?\n4. Önerilen çerçeve mevcut yaklaşımlardan nasıl ayrılmaktadır?\n\nTemel Argüman:\nBu çalışma, ${baslik} başlığını mevcut literatürün ötesine taşıyarak kuramsal olarak tutarlı ve metodolojik olarak savunulabilir bir okuma önermektedir. Merkez iddia, mevcut yaklaşımların belirli sınırlılıklar nedeniyle eksik kaldığı ve bu nedenle daha bütüncül bir analize ihtiyaç olduğudur.\n\nHedeflenen Literatür Boşluğu:\n• Kuramsal boşluk: İlgili literatürde baskın çerçeveler tek eksenli kalmaktadır.\n• Metodolojik boşluk: ${yontem} doğrultusunda derinlemesine çalışmalar sınırlıdır.\n• Bağlamsal boşluk: Vaka / ülke / dönem bağlamı çoğu çalışmada yüzeysel ele alınmaktadır.\n• Kavramsal boşluk: Anahtar kavramlar yeterince teorikleştirilmemiştir.\n\nÖnerilen Yöntem:\n• Birincil yöntem: ${yontem}\n• Veri türü: metin / belge / görüşme / vaka verisi\n• Analiz tekniği: içerik, söylem veya karşılaştırmalı analiz\n• Gerekçe: araştırma sorusunun doğası çok katmanlı ve yorumlayıcı bir inceleme gerektiriyor.\n\nAlternatif Yöntemler ve Neden Elendikleri:\n1. Standart nicel yaklaşım: bağlamsal derinliği sınırlayabilir.\n2. Yalnızca betimleyici çerçeve: özgün katkıyı zayıflatabilir.\n3. Dar vaka anlatısı: genellenebilir kuramsal sonuç üretmekte yetersiz kalabilir.\n\nBölüm Planı:\n1. Giriş\n2. Literatür Taraması\n3. Araştırma Boşluğu ve Kuramsal Çerçeve\n4. Yöntem\n5. Analiz ve Bulgular\n6. Tartışma\n7. Sonuç ve Öneriler\n8. Kaynakça (30–65 kaynak hedefi)\n\nDesk Reject Riskleri:\n• Yüksek: Başlık çok geniş kalırsa odak kaybolabilir.\n• Orta: Literatür güncelliği zayıfsa hakem güveni düşer.\n• Orta: Yöntem seçimi savunulmazsa makale kırılganlaşır.\n• Düşük: Özgün katkı sonuç bölümünde zayıf kalabilir.\n\nHakemlerin Muhtemel Soru Alanları:\n• Kuram-vaka bağı yeterince net mi?\n• Seçilen yöntem neden en uygun yöntem?\n• Bulgular literatürle nasıl konuşuyor?\n• Karşı argümanlar yeterince ele alındı mı?\n\nYayın Stratejisi:\n• Hedef dergi: ${hedefDergi}\n• Hedef indeks: ${hedef}\n• Kaynakça stili: ${state.kaynakca_stili}\n• Benzerlik hedefi: ${state.hedef_benzerlik}`;
+      state.yol_haritasi = output;
+      byId('roadmapOutput').textContent = output;
+      byId('roadmapOutput').classList.remove('hidden');
+      saveState();
+    }
+
+    function initSectionWriter(){
+      const tabs = byId('sectionTabs');
+      const panels = byId('sectionPanels');
+      tabs.innerHTML = sectionKeys.map(([k,v],i)=>`<button class="tab-btn ${i===0?'active':''}" data-sect="${k}">${v}</button>`).join('');
+      panels.innerHTML = sectionKeys.map(([k,v],i)=>`<div class="tab-panel ${i===0?'active':''}" id="panel_${k}">
+        <label>${v}</label>
+        <textarea id="txt_${k}" placeholder="${v} içeriğini buraya yazın."></textarea>
+        <div class="btn-row">
+          <button class="btn primary" data-save="${k}">💾 Bölümü Kaydet</button>
+          <button class="btn secondary" data-check="${k}">🔍 Hakem Kontrolü</button>
+        </div>
+        <div id="out_${k}" class="output hidden" style="margin-top:14px"></div>
+      </div>`).join('');
+      tabs.querySelectorAll('.tab-btn').forEach(btn=>btn.addEventListener('click',()=>{
+        tabs.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b===btn));
+        panels.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active', p.id===`panel_${btn.dataset.sect}`));
+      }));
+      sectionKeys.forEach(([k,v])=>{
+        byId(`txt_${k}`).value = state.bolumler[k] || '';
+        byId(`txt_${k}`).addEventListener('input',()=>{ state.bolumler[k]=byId(`txt_${k}`).value; });
+      });
+      panels.querySelectorAll('[data-save]').forEach(btn=>btn.addEventListener('click',()=>saveSection(btn.dataset.save)));
+      panels.querySelectorAll('[data-check]').forEach(btn=>btn.addEventListener('click',()=>runSectionCheck(btn.dataset.check)));
+      const select = byId('singleSectionSelect');
+      select.innerHTML = sectionKeys.map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
+      select.addEventListener('change',()=>syncSingleSectionFromSaved());
+      syncSingleSectionFromSaved();
+    }
+    function saveSection(key){
+      state.bolumler[key] = byId(`txt_${key}`).value;
+      const label = sectionKeys.find(([k])=>k===key)[1];
+      state.ilerleme[label] = !!state.bolumler[key].trim();
+      saveState();
+      const out = byId(`out_${key}`);
+      out.textContent = `${label} bölümü kaydedildi.\n\nUzunluk: ${state.bolumler[key].trim().length} karakter\nDurum: ${state.ilerleme[label] ? 'Tamamlandı işaretlendi' : 'Boş'}`;
+      out.classList.remove('hidden');
+      syncSingleSectionFromSaved();
+    }
+    function getChecklist(label){
+      const checks = {
+        'Giriş':['Konu önemi açık mı?','Araştırma problemi net mi?','Literatür boşluğu belirtilmiş mi?','Araştırma sorusu görünür mü?','Özgün katkı vurgulanmış mı?'],
+        'Literatür':['Tematik akış var mı?','Eleştirel tartışma var mı?','Uyuşan ve çatışan görüşler ayrıştırılmış mı?','Boşluğa geçiş kurulmuş mu?','Güncel kaynak dengesi var mı?'],
+        'Yöntem':['Veri türü net mi?','Örneklem/vaka seçimi gerekçeli mi?','Analiz tekniği açıklanmış mı?','Yöntem alternatifi neden elendiği söylenmiş mi?'],
+        'Analiz':['Bulgular sistematik mi?','Alt temalar net mi?','Literatürle konuşuyor mu?','Yorum-bulgu ayrımı korunmuş mu?'],
+        'Sonuç':['Araştırma sorusuna dönüyor mu?','Katkı açık mı?','Sınırlılıklar belirtilmiş mi?','Gelecek araştırma önerisi var mı?']
+      };
+      return checks[label] || ['Mantıksal akış korunmuş mu?','Akademik ton tutarlı mı?','Atıf ihtiyacı olan yerler belirgin mi?','Tekrarlar azaltılmış mı?'];
+    }
+    function runSectionCheck(key){
+      const label = sectionKeys.find(([k])=>k===key)[1];
+      const text = (byId(`txt_${key}`).value||'').trim();
+      const out = byId(`out_${key}`);
+      if(!text){ out.textContent = 'Önce bölüm içeriği girin.'; out.classList.remove('hidden'); return; }
+      const wordCount = text.split(/\s+/).filter(Boolean).length;
+      const checklist = getChecklist(label).map(c=>`☐ ${c}`).join('\n');
+      out.textContent = `🔍 ${label} Hakem Kontrolü\n\nKelime sayısı: ${wordCount}\n\nKontrol listesi:\n${checklist}\n\nOtomatik gözlem:\n• Metnin tutarlılık ve atıf yoğunluğu ayrıca insan kontrolü gerektirir.\n• Bölüm sonunda özgün katkı cümlesi eklemek hakem dayanıklılığını artırır.`;
+      out.classList.remove('hidden');
+    }
+    function assembleArticle(){
+      const title = state.bolumler.baslik || state.makale_basligi || 'Başlıksız Makale';
+      const content = [
+        title,
+        '\nABSTRACT\n' + (state.bolumler.abstract || '[Abstract eklenmedi]'),
+        '\nANAHTAR KELİMELER\n' + (state.bolumler.anahtar_kelimeler || '[Anahtar kelime eklenmedi]'),
+        '\nGİRİŞ\n' + (state.bolumler.giris || '[Giriş eklenmedi]'),
+        '\nLİTERATÜR\n' + (state.bolumler.literatur || '[Literatür eklenmedi]'),
+        '\nARAŞTIRMA BOŞLUĞU\n' + (state.bolumler.arastirma_boslugu || '[Araştırma boşluğu eklenmedi]'),
+        '\nKURAMSAL ÇERÇEVE\n' + (state.bolumler.kuramsal_cerceve || '[Kuramsal çerçeve eklenmedi]'),
+        '\nYÖNTEM\n' + (state.bolumler.yontem || '[Yöntem eklenmedi]'),
+        '\nANALİZ\n' + (state.bolumler.analiz || '[Analiz eklenmedi]'),
+        '\nSONUÇ\n' + (state.bolumler.sonuc || '[Sonuç eklenmedi]'),
+        '\nKAYNAKÇA\n' + ((state.kaynaklar.length? state.kaynaklar.map(formatRef).join('\n') : state.bolumler.kaynakca) || '[Kaynakça eklenmedi]')
+      ].join('\n\n');
+      byId('fullArticleOutput').textContent = content;
+      byId('fullArticleOutput').classList.remove('hidden');
+      return content;
+    }
+    function generateReview(){
+      const text = byId('reviewerInput').value.trim();
+      if(!text){ alert('Lütfen değerlendirilecek metni girin.'); return; }
+      const wc = text.split(/\s+/).filter(Boolean).length;
+      const hasMethod = /yöntem|method|örneklem|sample|analiz/i.test(text);
+      const hasGap = /boşluk|gap|literatür|literature/i.test(text);
+      const hasContribution = /katkı|contribution|özgün/i.test(text);
+      const major = [];
+      const minor = [];
+      if(!hasGap) major.push('Literatürdeki boşluk ve bu boşluğun neden önemli olduğu yeterince görünür değil.');
+      if(!hasMethod) major.push('Yöntemsel savunma zayıf; veri, örneklem ve analiz tekniği daha açık gerekçelendirilmelidir.');
+      if(!hasContribution) major.push('Özgün katkı cümlesi net değil; makalenin mevcut literatürden nasıl ayrıldığı açık yazılmalıdır.');
+      if(wc < 350) major.push('Metin akademik makale standardı için henüz kısa; argüman ve literatür desteği genişletilmelidir.');
+      minor.push('Bölüm geçişleri daha yumuşak kurulabilir.');
+      minor.push('Kavramlar ilk geçtiği yerde daha net tanımlanabilir.');
+      minor.push('Bazı cümleler daha kısa ve doğrudan kurulabilir.');
+      const output = `📋 HAKEM DEĞERLENDİRME RAPORU\n\nBüyük Eleştiriler:\n${major.length?major.map((x,i)=>`${i+1}. ${x}`).join('\n'):'1. Metin ana unsurları içeriyor; büyük yapısal açık görünmüyor.'}\n\nKüçük Eleştiriler:\n${minor.map((x,i)=>`${i+1}. ${x}`).join('\n')}\n\nRevizyon Stratejisi:\n1. Girişe literatür boşluğu ve özgün katkı cümlesi ekleyin.\n2. Yöntem bölümünde veri, seçim mantığı ve analiz tekniğini savunun.\n3. Bulgular ile tartışma arasına literatür diyaloğu kurun.\n4. Sonuçta katkı-sınırlılık-gelecek araştırma üçlüsünü netleştirin.\n\nKarar Gerekçesi:\nMevcut haliyle metin potansiyel taşımaktadır; ancak yayın dayanıklılığı için özellikle yöntem ve katkı görünürlüğü güçlendirilmelidir.`;
+      byId('reviewOutput').textContent = output;
+      byId('reviewOutput').classList.remove('hidden');
+    }
+    function formatRef(r){
+      const doi = r.doi ? ` ${r.doi}` : '';
+      return `${r.authors} (${r.year}). ${r.title}. ${r.source}.${doi} [${r.tier}]`;
+    }
+    function updateRefMetrics(){
+      byId('refCount').textContent = state.kaynaklar.length;
+      byId('refCountA').textContent = state.kaynaklar.filter(x=>x.tier==='A').length;
+      byId('refCountB').textContent = state.kaynaklar.filter(x=>x.tier==='B').length;
+      byId('refCountC').textContent = state.kaynaklar.filter(x=>x.tier==='C').length;
+      byId('refList').innerHTML = state.kaynaklar.map((r,i)=>`<div class="list-item"><strong>${i+1}. ${escapeHtml(r.authors)}</strong> <span class="pill">${r.tier}</span><br>${escapeHtml(formatRef(r))}<div class="btn-row"><button class="btn ghost" onclick="removeRef(${i})">Sil</button></div></div>`).join('');
+    }
+    window.removeRef = function(i){ state.kaynaklar.splice(i,1); saveState(); };
+    function addRef(){
+      const r = { authors:byId('refAuthors').value.trim(), year:byId('refYear').value.trim(), title:byId('refTitle').value.trim(), source:byId('refSource').value.trim(), doi:byId('refDoi').value.trim(), tier:byId('refTier').value };
+      if(!r.authors || !r.year || !r.title){ alert('Yazar, yıl ve başlık alanları gerekli.'); return; }
+      state.kaynaklar.push(r);
+      ['refAuthors','refYear','refTitle','refSource','refDoi'].forEach(id=>byId(id).value='');
+      saveState();
+    }
+    function convertThesis(){
+      const title = byId('thesisTitle').value.trim();
+      const type = byId('thesisType').value;
+      const field = byId('thesisField').value;
+      const summary = byId('thesisSummary').value.trim();
+      const output = `📋 TEZDEN MAKALEYE DÖNÜŞTÜRME PLANI\n\nTez başlığı: ${title || '[Belirtilmedi]'}\nTez türü: ${type}\nAlan: ${field}\n\nÖnerilen dönüşüm stratejisi:\n1. Tezi tek makale yerine 1 ana, 1 destekleyici makale olacak şekilde parçalara ayırın.\n2. Giriş bölümünü problem-özgün katkı ekseninde yeniden yazın.\n3. Literatür özetleyici dilden eleştirel dile çekilsin.\n4. Yöntem yalnızca makalenin ana sorusuna hizmet eden kısım kadar daraltılsın.\n5. Bulgular bölümünde tezdeki tüm alt analizler yerine en güçlü eksen seçilsin.\n\nMakale seçenekleri:\n• Ana makale: tezinizin çekirdek kuramsal katkısını öne çıkarır.\n• İkinci makale: belirli bir vaka, dönem ya da alt veri setine odaklanır.\n\nKısa özet analizi:\n${summary || '[Özet girilmedi]'}\n\nRisk notu:\nTez dilini aynen korumak makaleyi hantal yapabilir; metni daha seçici ve yayın odaklı yeniden kurgulayın.`;
+      byId('thesisOutput').textContent = output; byId('thesisOutput').classList.remove('hidden');
+    }
+    function adaptJournal(){
+      const journal = byId('journalName').value.trim() || '[Dergi belirtilmedi]';
+      const area = byId('journalArea').value.trim() || '[Alan belirtilmedi]';
+      const rules = byId('journalRules').value.trim();
+      const score = Math.min(95, 55 + (state.bolumler.abstract?8:0) + (state.bolumler.yontem?10:0) + (state.kaynaklar.length>=15?12:0) + (rules?8:0));
+      const output = `📊 UYARLAMA SONUÇLARI\n\nHedef dergi: ${journal}\nAlan: ${area}\nKaynakça stili: ${byId('journalStyle').value}\nUyumluluk skoru: ${score}/100\n\nYapılması önerilen uyarlamalar:\n1. Başlık ve abstract, derginin tipik okur kitlesine göre yeniden konumlandırılmalı.\n2. Girişte dergiye uygun kuramsal konuşma alanı açılmalı.\n3. Yöntem kısmında hakem beklentisine uygun açıklık artırılmalı.\n4. Sonuç bölümü daha net katkı ve politika / teori çıkarımı içermeli.\n\nDergi yönergesi notları:\n${rules || '[Yönerge girilmedi]'}`;
+      byId('journalOutput').textContent = output; byId('journalOutput').classList.remove('hidden');
+    }
+    function strengthenAbstract(){
+      const text = byId('abstractInput').value.trim();
+      if(!text){ alert('Abstract metni girin.'); return; }
+      const lang = byId('abstractLang').value;
+      const structure = byId('abstractStructure').value;
+      let output;
+      if(lang==='Türkçe'){
+        output = structure==='Yapılandırılmış'
+        ? `Güçlendirilmiş Öz\n\nAmaç: Bu çalışma, ${state.makale_basligi || 'ilgili araştırma konusunu'} kuramsal ve metodolojik boyutlarıyla analiz etmeyi amaçlamaktadır.\nYöntem: Çalışma, ${state.yontem_tercihi || 'uygun bir nitel yaklaşım'} çerçevesinde yapılandırılmıştır.\nBulgular: Mevcut literatürdeki boşlukların özellikle kuramsal tutarlılık, bağlamsal derinlik ve yöntem savunusu alanlarında yoğunlaştığı görülmektedir.\nSonuç: Araştırma, literatüre özgün katkı sağlayabilecek bir çerçeve önermekte ve gelecekteki çalışmalar için analitik bir zemin oluşturmaktadır.\n\nOrijinal metin:\n${text}`
+        : `Güçlendirilmiş Öz\n\nBu çalışma, ${state.makale_basligi || 'ilgili konuyu'} kuramsal ve metodolojik açıdan yeniden değerlendirmektedir. Çalışma, mevcut literatürde görünür olan kavramsal ve bağlamsal sınırlılıkları tartışmakta; ${state.yontem_tercihi || 'seçilen araştırma yaklaşımı'} üzerinden daha savunulabilir bir analiz hattı önermektedir. Elde edilen çerçeve, yalnızca mevcut bilgiyi özetlemekle kalmamakta; aynı zamanda özgün katkının nerede üretildiğini daha görünür kılmaktadır.`;
+      } else {
+        output = structure==='Yapılandırılmış'
+        ? `Strengthened Abstract\n\nPurpose: This study aims to analyze ${state.makale_basligi || 'the focal topic'} through a theoretically coherent and methodologically defensible lens.\nMethod: The research is designed around ${state.yontem_tercihi || 'an appropriate qualitative approach'}.\nFindings: The review indicates major gaps in theoretical clarity, contextual depth, and methodological justification.\nConclusion: The article proposes a stronger analytical framework and clarifies its original contribution to the field.\n\nOriginal text:\n${text}`
+        : `Strengthened Abstract\n\nThis article revisits ${state.makale_basligi || 'the focal topic'} by combining theoretical clarity with methodological justification. Rather than merely summarizing the literature, it foregrounds the main gap, explains why that gap matters, and outlines a more robust analytical route that can sustain peer-review scrutiny.`;
+      }
+      byId('abstractOutput').textContent = output; byId('abstractOutput').classList.remove('hidden');
+      state.bolumler.abstract = text; saveState();
+    }
+    function syncSingleSectionFromSaved(){
+      const key = byId('singleSectionSelect').value || 'giris';
+      byId('singleSectionText').value = state.bolumler[key] || '';
+    }
+    function runSingleSection(mode){
+      const key = byId('singleSectionSelect').value;
+      const label = sectionKeys.find(([k])=>k===key)[1];
+      const text = byId('singleSectionText').value.trim();
+      if(!text){ alert('Bölüm içeriği boş.'); return; }
+      let output = '';
+      if(mode==='rewrite'){
+        output = `📝 ${label} Bölümü için Güçlendirilmiş Yazım Notu\n\n• Açılış cümlesini daha iddialı ve problem odaklı kurun.\n• Her paragrafın sonunda bir mikro-sonuç cümlesi ekleyin.\n• Hakem dayanıklılığı için yöntem, boşluk veya katkı bağlantısını daha görünür yazın.\n\nÖrnek yönlendirme:\n“Bu bölüm, mevcut literatürde yeterince görünür olmayan [X] eksenini açıklığa kavuşturmakta ve çalışmanın genel argümanına kurucu bir zemin hazırlamaktadır.”`;
+      } else if(mode==='critique') {
+        output = `🔍 ${label} için Hakem Eleştirisi\n\n1. Bölümün temel işlevi açık; ancak makalenin genel sorusuna bağlantısı daha sık gösterilmeli.\n2. Bazı paragraflar açıklayıcı kalıyor; daha fazla analitik yoğunluk önerilir.\n3. Atıf gerektiren bazı iddialar için kaynak görünürlüğü artırılmalı.\n\nSavunma hattı:\n• Bu bölüm, makalenin çekirdek argümanını hazırlayan ara bağlantı işlevi gördüğü için korunmalıdır.\n• Yine de bölüm sonuna bir “bu bölümün katkısı” cümlesi eklenmelidir.`;
+      } else {
+        output = `⚠️ ${label} için Desk Reject Analizi\n\nRisk düzeyi: ${text.split(/\s+/).length < 250 ? 'Orta-Yüksek' : 'Orta'}\n\nRisk başlıkları:\n• Odak kayması\n• Yetersiz kaynaklandırma\n• Yöntem / katkı bağı zayıflığı\n\nAzaltma önerileri:\n1. Bölümün ilk paragrafına açık amaç cümlesi ekleyin.\n2. Son paragrafta makalenin ana argümanına geri dönün.\n3. Gerekirse 2–3 yüksek kaliteli kaynakla destekleyin.`;
+      }
+      state.bolumler[key] = text; state.ilerleme[label] = true; saveState();
+      byId('singleSectionOutput').textContent = output; byId('singleSectionOutput').classList.remove('hidden');
+    }
+    function renderFinalChecklist(){
+      const items = [
+        ['Başlık girildi', !!(state.makale_basligi||state.bolumler.baslik)],
+        ['Abstract mevcut', !!state.bolumler.abstract],
+        ['Giriş mevcut', !!state.bolumler.giris],
+        ['Literatür mevcut', !!state.bolumler.literatur],
+        ['Yöntem mevcut', !!state.bolumler.yontem],
+        ['Analiz mevcut', !!state.bolumler.analiz],
+        ['Sonuç mevcut', !!state.bolumler.sonuc],
+        ['En az 10 kaynak var', state.kaynaklar.length >= 10],
+        ['A düzeyi kaynak var', state.kaynaklar.some(x=>x.tier==='A')],
+        ['Hedef dergi bilgisi girildi', !!state.hedef_dergi]
+      ];
+      byId('finalChecklist').innerHTML = items.map(([txt,ok])=>`<div class="check"><input type="checkbox" ${ok?'checked':''} disabled /><div><strong>${txt}</strong><div class="small muted">${ok?'Tamamlandı':'Eksik'}</div></div></div>`).join('');
+    }
+    function runFinalCheck(){
+      const completeness = [state.bolumler.abstract,state.bolumler.giris,state.bolumler.literatur,state.bolumler.yontem,state.bolumler.analiz,state.bolumler.sonuc].filter(Boolean).length;
+      const score = Math.round(40 + completeness*8 + Math.min(20, state.kaynaklar.length));
+      const output = `📊 SON DEĞERLENDİRME\n\nHazırlık skoru: ${Math.min(score,98)}/100\n\nGenel yorum:\n• Makalenin temel iskeleti ${completeness>=5?'büyük ölçüde oluşmuş durumda':'henüz eksik parçalar içeriyor'}.\n• Kaynakça yoğunluğu ${state.kaynaklar.length>=15?'yayın eşiğine yaklaşmış görünüyor':'artırılmalı'}.\n• Yöntem ve özgün katkı cümleleri son turda ayrıca gözden geçirilmeli.\n\nTeslim öncesi kritik son üç adım:\n1. Girişte literatür boşluğu ve katkıyı tek paragrafta kilitleyin.\n2. Yöntem savunusunu alternatif yöntemlerle karşılaştırarak güçlendirin.\n3. Kaynakça ve metin içi atıfları ${state.kaynakca_stili} standardına göre eşleştirin.`;
+      byId('finalOutput').textContent = output; byId('finalOutput').classList.remove('hidden');
+    }
+    function maskText(){
+      const text = byId('maskInput').value.trim();
+      if(!text){ alert('Metin girin.'); return; }
+      const replacements = [
+        [/Bu çalışma/g,'Bu araştırma'],[/önemlidir/g,'dikkate değerdir'],[/göstermektedir/g,'ortaya koymaktadır'],[/sonuç olarak/g,'bu çerçevede'],[/ancak/g,'bununla birlikte']
+      ];
+      let out = text;
+      replacements.forEach(([a,b])=> out = out.replace(a,b));
+      const result = `Doğallaştırma Notları:\n• Aynı yapıdaki cümleleri kısaltın ve farklı uzunlukta cümleler kullanın.\n• Aşırı düzenli paragraf yapısını biraz gevşetin.\n• Kavramsal yoğunluğu koruyup şablon ifadeleri azaltın.\n\nSınırlı yeniden ifade:\n${out}`;
+      byId('maskOutput').textContent = result; byId('maskOutput').classList.remove('hidden');
+    }
+    function updateApiStatus(){
+      const a = state.api_ayarlari;
+      byId('openaiStatus').textContent = a.openai_api_key ? '🟢 Aktif' : '🔴 Pasif';
+      byId('anthropicStatus').textContent = a.anthropic_api_key ? '🟢 Aktif' : '🔴 Pasif';
+      byId('googleStatus').textContent = a.google_api_key ? '🟢 Aktif' : '🔴 Pasif';
+      if(byId('openaiKey')) byId('openaiKey').value = a.openai_api_key || '';
+      if(byId('anthropicKey')) byId('anthropicKey').value = a.anthropic_api_key || '';
+      if(byId('googleKey')) byId('googleKey').value = a.google_api_key || '';
+      byId('openaiModel').value = a.openai_model || 'gpt-4-turbo-preview';
+      byId('anthropicModel').value = a.anthropic_model || 'claude-3-sonnet-20240229';
+      byId('googleModel').value = a.google_model || 'gemini-pro';
+      byId('activeProvider').value = a.active_provider || 'openai';
+      byId('temperature').value = a.temperature ?? 0.7;
+      byId('maxTokens').value = a.max_tokens ?? 4000;
+    }
+    function initApiTabs(){
+      document.querySelectorAll('#api_entegrasyonu .tab-btn').forEach(btn=>btn.addEventListener('click',()=>{
+        document.querySelectorAll('#api_entegrasyonu .tab-btn').forEach(b=>b.classList.toggle('active',b===btn));
+        document.querySelectorAll('#api_entegrasyonu .tab-panel').forEach(p=>p.classList.toggle('active', p.id===btn.dataset.tab));
+      }));
+    }
+    function bindEvents(){
+      byId('generateRoadmap').addEventListener('click', generateRoadmap);
+      byId('approveRoadmap').addEventListener('click', ()=>switchMode('makale_yazim'));
+      byId('assembleArticle').addEventListener('click', assembleArticle);
+      byId('downloadArticleTxt').addEventListener('click', ()=>download('makale.txt', assembleArticle()));
+      byId('generateReview').addEventListener('click', generateReview);
+      byId('addRefBtn').addEventListener('click', addRef);
+      byId('exportRefsBtn').addEventListener('click', ()=>download('kaynakca.txt', state.kaynaklar.map(formatRef).join('\n')));
+      byId('convertThesisBtn').addEventListener('click', convertThesis);
+      byId('adaptJournalBtn').addEventListener('click', adaptJournal);
+      byId('strengthenAbstractBtn').addEventListener('click', strengthenAbstract);
+      byId('rewriteSectionBtn').addEventListener('click', ()=>runSingleSection('rewrite'));
+      byId('critiqueSectionBtn').addEventListener('click', ()=>runSingleSection('critique'));
+      byId('deskRiskBtn').addEventListener('click', ()=>runSingleSection('desk'));
+      byId('runFinalCheckBtn').addEventListener('click', runFinalCheck);
+      byId('maskBtn').addEventListener('click', maskText);
+      byId('saveOpenAI').addEventListener('click', ()=>{ state.api_ayarlari.openai_api_key = byId('openaiKey').value.trim(); state.api_ayarlari.openai_model=byId('openaiModel').value; saveState(); alert('OpenAI ayarları kaydedildi.'); });
+      byId('saveAnthropic').addEventListener('click', ()=>{ state.api_ayarlari.anthropic_api_key = byId('anthropicKey').value.trim(); state.api_ayarlari.anthropic_model=byId('anthropicModel').value; saveState(); alert('Anthropic ayarları kaydedildi.'); });
+      byId('saveGoogle').addEventListener('click', ()=>{ state.api_ayarlari.google_api_key = byId('googleKey').value.trim(); state.api_ayarlari.google_model=byId('googleModel').value; saveState(); alert('Google ayarları kaydedildi.'); });
+      byId('saveProvider').addEventListener('click', ()=>{ state.api_ayarlari.active_provider = byId('activeProvider').value; state.api_ayarlari.temperature=Number(byId('temperature').value); state.api_ayarlari.max_tokens=Number(byId('maxTokens').value); saveState(); alert('Gelişmiş ayarlar kaydedildi.'); });
+      byId('testApiBtn').addEventListener('click', ()=>{ const p=state.api_ayarlari.active_provider; const hasKey=(p==='openai'&&state.api_ayarlari.openai_api_key)||(p==='anthropic'&&state.api_ayarlari.anthropic_api_key)||(p==='google'&&state.api_ayarlari.google_api_key); const msg=byId('testMessage').value; const out=byId('apiTestOutput'); out.textContent = hasKey ? `✅ ${p.toUpperCase()} bağlantı ayarları kayıtlı.\nTest mesajı: ${msg}\nNot: HTML sürümünde gerçek API çağrısı yapılmaz.` : `⚠️ Önce ${p.toUpperCase()} API anahtarı girin.`; out.classList.remove('hidden'); });
+      byId('saveJsonBtn').addEventListener('click', ()=>download('akademik-proje.json', JSON.stringify(state,null,2), 'application/json;charset=utf-8'));
+      byId('loadJsonInput').addEventListener('change', (e)=>{ const file=e.target.files[0]; if(!file) return; const reader=new FileReader(); reader.onload=()=>{ try{ state={...structuredClone(defaultState), ...JSON.parse(reader.result)}; localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); location.reload(); }catch(err){ alert('JSON okunamadı.'); } }; reader.readAsText(file,'utf-8'); });
+      byId('resetBtn').addEventListener('click', ()=>{ if(confirm('Tüm veriler silinsin mi?')){ localStorage.removeItem(STORAGE_KEY); state=structuredClone(defaultState); location.reload(); }});
+    }
+    function initialFill(){
+      if(state.yol_haritasi){ byId('roadmapOutput').textContent = state.yol_haritasi; byId('roadmapOutput').classList.remove('hidden'); }
+      updateSidebar(); updateRefMetrics(); updateApiStatus(); renderFinalChecklist();
+    }
+
+    initNav();
+    populateGeneralFields();
+    initSectionWriter();
+    initApiTabs();
+    bindEvents();
+    initialFill();
+  </script>
+</body>
+</html>
